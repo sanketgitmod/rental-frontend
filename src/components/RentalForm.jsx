@@ -5,6 +5,11 @@ import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
+import UserName from "./UserName";
+import Wheels from "./Wheels";
+import Vehicle from "./Vehicle";
+import Model from "./Model";
+import Picker from "./Picker";
 
 const steps = [
   "What is your name",
@@ -23,19 +28,19 @@ function RentalForm() {
 
   function showStep() {
     if (activeStep === 0) {
-      return <h1>0</h1>;
+      return <UserName />;
     }
     if (activeStep === 1) {
-      return <h1>1</h1>;
+      return <Wheels />;
     }
     if (activeStep === 2) {
-      return <h1>2</h1>;
+      return <Vehicle />;
     }
     if (activeStep === 3) {
-      return <h1>3</h1>;
+      return <Model />;
     }
     if (activeStep === 4) {
-      return <h1>4</h1>;
+      return <Picker />;
     }
   }
 
@@ -64,10 +69,13 @@ function RentalForm() {
           <Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}</Typography>
           <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
             <Box sx={{ flex: "1 1 auto" }} />
-
-            {showStep()}
           </Box>
-          <Button variant="contained" onClick={handleNext}>
+          {showStep()}
+          <Button
+            variant="contained"
+            sx={{ marginY: 10, float: "right" }}
+            onClick={handleNext}
+          >
             {activeStep === steps.length - 1 ? "Finish" : "Next"}
           </Button>
         </>
