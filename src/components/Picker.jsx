@@ -17,8 +17,8 @@ function Picker({ onHandelDate, setDisabled }) {
   function getDate() {
     setButtonDisabled(true);
     onHandelDate({
-      sDate: `${startDate.$y}-${startDate.$M}-${startDate.$D}`,
-      eDate: `${endDate.$y}-${endDate.$M}-${endDate.$D}`,
+      sDate: new Date(startDate.toString()).toLocaleDateString(),
+      eDate: new Date(endDate.toString()).toLocaleDateString(),
     });
   }
   return (
