@@ -5,7 +5,32 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import { Typography } from "@mui/material";
 
-function Vehicle(props) {
+function Vehicle({ categories, numberOfWheels, onHandelVehicle }) {
+  const [categoryId, setCategoryId] = React.useState("");
+  const [vehicle, setVehicle] = React.useState([]);
+
+  React.useEffect(() => {
+    function getSubCatId() {
+      const subCat = categories.find(
+        (cat) => cat.categoryName === numberOfWheels
+      );
+      setCategoryId(subCat?._id.toString());
+    }
+    getSubCatId();
+  }, []);
+  React.useEffect(() => {
+    async function getSubCategory() {
+      const response = await fetch(
+        `http://localhost:4002/api/sub-category/${categoryId}`
+      );
+      const data = await response.json();
+      setVehicle(data);
+    }
+    getSubCategory();
+  }, [categoryId]);
+  function onChangeValue(event) {
+    onHandelVehicle({ value: event.target.value, vehicle });
+  }
   return (
     <FormControl
       sx={{
@@ -19,11 +44,17 @@ function Vehicle(props) {
       </Typography>
       <RadioGroup
         aria-labelledby="demo-radio-buttons-group-label"
-        defaultValue="sports"
+        onChange={onChangeValue}
         name="radio-buttons-group"
       >
-        <FormControlLabel value="sports" control={<Radio />} label="sports" />
-        <FormControlLabel value="cruiser" control={<Radio />} label="cruiser" />
+        {vehicle.map((v) => (
+          <FormControlLabel
+            value={v.subCategoryName}
+            control={<Radio />}
+            label={v.subCategoryName}
+            key={v._id}
+          />
+        ))}
       </RadioGroup>
     </FormControl>
   );

@@ -5,7 +5,30 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import { Typography } from "@mui/material";
 
-function Model(props) {
+function Model({ vehicle, typeOfVehicle, onHandelModel }) {
+  const [mastspecId, setMastspecId] = React.useState([]);
+  const [masterSpec, setMasterSpec] = React.useState([]);
+
+  React.useEffect(() => {
+    async function getMasterSpec() {
+      const response = await fetch(
+        `http://localhost:4002/api/master-specification/${mastspecId}`
+      );
+      const data = await response.json();
+      setMasterSpec(data);
+    }
+    getMasterSpec();
+  }, [mastspecId]);
+  React.useEffect(() => {
+    function getMasterSpecId() {
+      const subCat = vehicle.find((v) => v.subCategoryName === typeOfVehicle);
+      setMastspecId(subCat?._id.toString());
+    }
+    getMasterSpecId();
+  }, []);
+  function onChangeValue(event) {
+    onHandelModel({ value: event.target.value, masterSpec });
+  }
   return (
     <FormControl
       sx={{
@@ -19,10 +42,17 @@ function Model(props) {
       </Typography>
       <RadioGroup
         aria-labelledby="demo-radio-buttons-group-label"
+        onChange={onChangeValue}
         name="radio-buttons-group"
       >
-        <FormControlLabel value="r15" control={<Radio />} label="r15" />
-        <FormControlLabel value="m15" control={<Radio />} label="m15" />
+        {masterSpec.map((m) => (
+          <FormControlLabel
+            value={m.masterSpecificationName}
+            control={<Radio />}
+            label={m.masterSpecificationName}
+            key={m.masterSpecificationName}
+          />
+        ))}
       </RadioGroup>
     </FormControl>
   );

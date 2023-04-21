@@ -5,7 +5,11 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import { Typography } from "@mui/material";
 
-function Wheels(props) {
+function Wheels({ categories, onHandelWheels }) {
+  function onChangeValue(event) {
+    onHandelWheels(event.target.value);
+  }
+
   return (
     <FormControl
       sx={{
@@ -19,11 +23,17 @@ function Wheels(props) {
       </Typography>
       <RadioGroup
         aria-labelledby="demo-radio-buttons-group-label"
-        defaultValue="2"
+        onChange={onChangeValue}
         name="radio-buttons-group"
       >
-        <FormControlLabel value="2" control={<Radio />} label="2" />
-        <FormControlLabel value="4" control={<Radio />} label="4" />
+        {categories.map((category) => (
+          <FormControlLabel
+            value={category.categoryName}
+            control={<Radio />}
+            label={category.categoryName}
+            key={category._id}
+          />
+        ))}
       </RadioGroup>
     </FormControl>
   );

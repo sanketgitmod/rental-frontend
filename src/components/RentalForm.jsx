@@ -21,26 +21,101 @@ const steps = [
 
 function RentalForm() {
   const [activeStep, setActiveStep] = React.useState(0);
+  const [categories, setCategories] = React.useState([]);
+
+  const [vehicle, setVehicle] = React.useState([]);
+  const [userData, setUserData] = React.useState({
+    firstName: "",
+    lastName: "",
+    numberOfWheels: "",
+    typeOfVehicle: "",
+    specificModel: "",
+    startDate: "",
+    endDate: "",
+  });
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
 
+  const handleSubmit = () => {
+    async function getCategory() {
+      const response = await fetch(`http://localhost:4002/api/users`, {
+        method: "POST",
+        body: JSON.stringify(userData),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await response.json();
+    }
+    getCategory();
+  };
+
+  function getName(userName) {
+    setUserData((preUserData) => ({ ...preUserData, ...userName }));
+  }
+  function getWheels(data) {
+    setUserData((preUserData) => ({
+      ...preUserData,
+      ...{ numberOfWheels: data },
+    }));
+  }
+  function getVehicle(data) {
+    setUserData((preUserData) => ({
+      ...preUserData,
+      ...{ typeOfVehicle: data.value },
+    }));
+    setVehicle(data.vehicle);
+  }
+  function getModel(data) {
+    setUserData((preUserData) => ({
+      ...preUserData,
+      ...{ specificModel: data.value },
+    }));
+  }
+  function getDate(data) {
+    setUserData((preUserData) => ({
+      ...preUserData,
+      ...{ startDate: data.sDate, endDate: data.eDate },
+    }));
+  }
+
+  React.useEffect(() => {
+    async function getCategory() {
+      const response = await fetch(`http://localhost:4002/api/category`);
+      const data = await response.json();
+      setCategories(data);
+    }
+    getCategory();
+  }, []);
   function showStep() {
     if (activeStep === 0) {
-      return <UserName />;
+      return <UserName onHandelUserName={getName} />;
     }
     if (activeStep === 1) {
-      return <Wheels />;
+      return <Wheels categories={categories} onHandelWheels={getWheels} />;
     }
     if (activeStep === 2) {
-      return <Vehicle />;
+      return (
+        <Vehicle
+          categories={categories}
+          numberOfWheels={userData.numberOfWheels}
+          onHandelVehicle={getVehicle}
+        />
+      );
     }
     if (activeStep === 3) {
-      return <Model />;
+      return (
+        <Model
+          vehicle={vehicle}
+          typeOfVehicle={userData.typeOfVehicle}
+          onHandelModel={getModel}
+        />
+      );
     }
     if (activeStep === 4) {
-      return <Picker />;
+      return <Picker onHandelDate={getDate} />;
     }
   }
 
@@ -63,6 +138,13 @@ function RentalForm() {
           <Typography sx={{ mt: 2, mb: 1 }}>
             All steps completed - you&apos;re finished
           </Typography>
+          <Button
+            variant="contained"
+            sx={{ marginY: 10 }}
+            onClick={handleSubmit}
+          >
+            Save
+          </Button>
         </>
       ) : (
         <>

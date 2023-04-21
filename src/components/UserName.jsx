@@ -3,7 +3,24 @@ import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 
-function UserName() {
+function UserName(props) {
+  const [userName, setUserName] = React.useState({
+    firstName: "",
+    lastName: "",
+  });
+
+  function getFirstName(e) {
+    setUserName({ ...userName, firstName: e.target.value });
+  }
+  function getLastName(e) {
+    setUserName({ ...userName, lastName: e.target.value });
+  }
+  function getName() {
+    if (userName.firstName.length > 2 && userName.lastName.length > 2) {
+      props.onHandelUserName(userName);
+    }
+  }
+
   return (
     <Box
       sx={{
@@ -24,6 +41,7 @@ function UserName() {
           label="First Name"
           name="firstname"
           autoFocus
+          onChange={getFirstName}
         />
         <TextField
           margin="normal"
@@ -32,6 +50,8 @@ function UserName() {
           id="lastname"
           label="Last Name"
           name="lastname"
+          onChange={getLastName}
+          onBlur={getName}
         />
       </Box>
     </Box>
