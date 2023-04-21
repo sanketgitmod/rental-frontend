@@ -1,10 +1,8 @@
 import * as React from "react";
-import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import "dayjs/locale/en-gb";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, TextField, Typography } from "@mui/material";
 
 function Picker({ onHandelDate, setDisabled }) {
   const [startDate, setStartDate] = React.useState(null);
@@ -29,22 +27,29 @@ function Picker({ onHandelDate, setDisabled }) {
         alignItems: "center",
       }}
     >
-      <Typography component="h1" variant="h5">
+      <Typography sx={{ marginY: 2 }} component="h1" variant="h5">
         Date range picker
       </Typography>
-      <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
-        <DemoContainer components={["DatePicker"]}>
-          <DatePicker
-            label="start date"
-            disabled={disabled}
-            onChange={(newValue) => setStartDate(newValue)}
-          />
-          <DatePicker
-            label="end date"
-            disabled={disabled}
-            onChange={(newValue) => setEndDate(newValue)}
-          />
-        </DemoContainer>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <DatePicker
+          label="start date"
+          disabled={disabled}
+          value={startDate}
+          onChange={(newValue) => {
+            setStartDate(newValue);
+          }}
+          renderInput={(params) => <TextField {...params} />}
+        />
+        <hr />
+        <DatePicker
+          label="end date"
+          disabled={disabled}
+          value={endDate}
+          onChange={(newValue) => {
+            setEndDate(newValue);
+          }}
+          renderInput={(params) => <TextField {...params} />}
+        />
       </LocalizationProvider>
       <Button
         variant="contained"
