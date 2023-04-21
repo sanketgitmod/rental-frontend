@@ -10,6 +10,8 @@ import Wheels from "./Wheels";
 import Vehicle from "./Vehicle";
 import Model from "./Model";
 import Picker from "./Picker";
+import UserList from "./UserList";
+import BookingList from "./BookingList";
 
 const steps = [
   "What is your name",
@@ -23,6 +25,7 @@ function RentalForm() {
   const [activeStep, setActiveStep] = React.useState(0);
   const [disabled, setDisabled] = React.useState(true);
   const [categories, setCategories] = React.useState([]);
+  const [bookingData, setBookingData] = React.useState([]);
 
   const [vehicle, setVehicle] = React.useState([]);
   const [userData, setUserData] = React.useState({
@@ -51,6 +54,8 @@ function RentalForm() {
       const data = await response.json();
     }
     getCategory();
+    setActiveStep(0);
+    setUserData({});
   };
 
   function changeDisabled() {
@@ -99,6 +104,14 @@ function RentalForm() {
     }
     getCategory();
   }, []);
+  React.useEffect(() => {
+    async function getBookings() {
+      const response = await fetch(`http://localhost:4002/api/users`);
+      const data = await response.json();
+      setBookingData(data);
+    }
+    getBookings();
+  }, [userData.endDate]);
   function showStep() {
     if (activeStep === 0) {
       return <UserName onHandelUserName={getName} />;
@@ -153,9 +166,8 @@ function RentalForm() {
       </Stepper>
       {activeStep === steps.length ? (
         <>
-          <Typography sx={{ mt: 2, mb: 1 }}>
-            All steps completed - you&apos;re finished
-          </Typography>
+          <Typography sx={{ mt: 2, mb: 1 }}>Confirm Booking.</Typography>
+          <UserList userData={userData} />
           <Button
             variant="contained"
             sx={{ marginY: 10 }}
@@ -190,6 +202,7 @@ function RentalForm() {
           </Box>
         </>
       )}
+      <BookingList userData={bookingData} />
     </Box>
   );
 }
