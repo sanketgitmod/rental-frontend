@@ -5,10 +5,13 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import { Typography } from "@mui/material";
 
-function Vehicle({ categories, numberOfWheels, onHandelVehicle }) {
+function Vehicle({ categories, setDisabled, numberOfWheels, onHandelVehicle }) {
   const [categoryId, setCategoryId] = React.useState("");
   const [vehicle, setVehicle] = React.useState([]);
 
+  React.useEffect(() => {
+    setDisabled();
+  }, []);
   React.useEffect(() => {
     function getSubCatId() {
       const subCat = categories.find(

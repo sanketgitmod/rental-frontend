@@ -5,11 +5,14 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import { Typography } from "@mui/material";
 
-function Wheels({ categories, onHandelWheels }) {
+function Wheels({ categories, setDisabled, onHandelWheels }) {
   function onChangeValue(event) {
     onHandelWheels(event.target.value);
   }
 
+  React.useEffect(() => {
+    setDisabled();
+  }, []);
   return (
     <FormControl
       sx={{

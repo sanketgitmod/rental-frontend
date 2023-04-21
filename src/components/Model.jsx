@@ -5,10 +5,13 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import { Typography } from "@mui/material";
 
-function Model({ vehicle, typeOfVehicle, onHandelModel }) {
+function Model({ vehicle, setDisabled, typeOfVehicle, onHandelModel }) {
   const [mastspecId, setMastspecId] = React.useState([]);
   const [masterSpec, setMasterSpec] = React.useState([]);
 
+  React.useEffect(() => {
+    setDisabled();
+  }, []);
   React.useEffect(() => {
     async function getMasterSpec() {
       const response = await fetch(

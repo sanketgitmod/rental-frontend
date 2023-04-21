@@ -6,13 +6,16 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { Box, Button, Typography } from "@mui/material";
 
-function Picker({ onHandelDate }) {
-  const [startDate, setStartDate] = React.useState([]);
-  const [endDate, setEndDate] = React.useState([]);
-  const [disabled, setDisabled] = React.useState(false);
+function Picker({ onHandelDate, setDisabled }) {
+  const [startDate, setStartDate] = React.useState(null);
+  const [endDate, setEndDate] = React.useState(null);
+  const [disabled, setButtonDisabled] = React.useState(false);
 
+  React.useEffect(() => {
+    setDisabled();
+  }, []);
   function getDate() {
-    setDisabled(true);
+    setButtonDisabled(true);
     onHandelDate({
       sDate: `${startDate.$y}-${startDate.$M}-${startDate.$D}`,
       eDate: `${endDate.$y}-${endDate.$M}-${endDate.$D}`,
@@ -43,8 +46,13 @@ function Picker({ onHandelDate }) {
           />
         </DemoContainer>
       </LocalizationProvider>
-      <Button variant="contained" sx={{ marginTop: 10 }} onClick={getDate}>
-        Done
+      <Button
+        variant="contained"
+        disabled={!(endDate && startDate) ? true : false}
+        sx={{ marginTop: 10 }}
+        onClick={getDate}
+      >
+        Save Date
       </Button>
     </Box>
   );

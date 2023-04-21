@@ -21,6 +21,7 @@ const steps = [
 
 function RentalForm() {
   const [activeStep, setActiveStep] = React.useState(0);
+  const [disabled, setDisabled] = React.useState(true);
   const [categories, setCategories] = React.useState([]);
 
   const [vehicle, setVehicle] = React.useState([]);
@@ -52,14 +53,20 @@ function RentalForm() {
     getCategory();
   };
 
+  function changeDisabled() {
+    setDisabled(true);
+  }
+
   function getName(userName) {
     setUserData((preUserData) => ({ ...preUserData, ...userName }));
+    setDisabled(false);
   }
   function getWheels(data) {
     setUserData((preUserData) => ({
       ...preUserData,
       ...{ numberOfWheels: data },
     }));
+    setDisabled(false);
   }
   function getVehicle(data) {
     setUserData((preUserData) => ({
@@ -67,18 +74,21 @@ function RentalForm() {
       ...{ typeOfVehicle: data.value },
     }));
     setVehicle(data.vehicle);
+    setDisabled(false);
   }
   function getModel(data) {
     setUserData((preUserData) => ({
       ...preUserData,
       ...{ specificModel: data.value },
     }));
+    setDisabled(false);
   }
   function getDate(data) {
     setUserData((preUserData) => ({
       ...preUserData,
       ...{ startDate: data.sDate, endDate: data.eDate },
     }));
+    setDisabled(false);
   }
 
   React.useEffect(() => {
@@ -94,11 +104,18 @@ function RentalForm() {
       return <UserName onHandelUserName={getName} />;
     }
     if (activeStep === 1) {
-      return <Wheels categories={categories} onHandelWheels={getWheels} />;
+      return (
+        <Wheels
+          setDisabled={changeDisabled}
+          categories={categories}
+          onHandelWheels={getWheels}
+        />
+      );
     }
     if (activeStep === 2) {
       return (
         <Vehicle
+          setDisabled={changeDisabled}
           categories={categories}
           numberOfWheels={userData.numberOfWheels}
           onHandelVehicle={getVehicle}
@@ -108,6 +125,7 @@ function RentalForm() {
     if (activeStep === 3) {
       return (
         <Model
+          setDisabled={changeDisabled}
           vehicle={vehicle}
           typeOfVehicle={userData.typeOfVehicle}
           onHandelModel={getModel}
@@ -115,7 +133,7 @@ function RentalForm() {
       );
     }
     if (activeStep === 4) {
-      return <Picker onHandelDate={getDate} />;
+      return <Picker setDisabled={changeDisabled} onHandelDate={getDate} />;
     }
   }
 
@@ -149,17 +167,27 @@ function RentalForm() {
       ) : (
         <>
           <Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}</Typography>
-          <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
-            <Box sx={{ flex: "1 1 auto" }} />
-          </Box>
+
           {showStep()}
-          <Button
-            variant="contained"
-            sx={{ marginY: 10, float: "right" }}
-            onClick={handleNext}
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              width: "40%",
+              marginLeft: 43,
+            }}
           >
-            {activeStep === steps.length - 1 ? "Finish" : "Next"}
-          </Button>
+            <Button
+              variant="contained"
+              fullWidth
+              sx={{ marginY: 5 }}
+              onClick={handleNext}
+              disabled={disabled}
+            >
+              {activeStep === steps.length - 1 ? "Finish" : "Next"}
+            </Button>
+          </Box>
         </>
       )}
     </Box>
